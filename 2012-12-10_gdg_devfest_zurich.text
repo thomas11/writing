@@ -1,0 +1,47 @@
+title: GDG DevFest Zurich with an intro to Go
+blurb: The Google Developers Group Zurich organized a great weekend of talks, hacking and networking in October. Unexpectedly, I got to present Go in an hour-long hands-on tutorial.
+categories: Go, Presenting, Meetups
+
+Before October, I had never made it to a
+[GDG Zurich](http://www.gdgzh.ch/) event, but the
+[DevFest 2012](https://sites.google.com/site/gdgdevfestzurich/) they
+announced sounded too interesting to pass it up. I don't want to bore
+you with the minutiae of how it went down, so let me just say it was a
+great and very well organized weekend. By my rough guess about 100
+hackers showed up, which I found quite impressive. After casual
+introductions and drinks on Friday night we spent Saturday and Sunday
+in the Zurich youth hostel for talks and hacking. Big thanks to the
+organizers Vadim, Michel, Corsin and Robert (see
+[here](https://sites.google.com/site/gdgdevfestzurich/home/orga)), you
+did a great job.
+
+I really enjoyed the presentations about AppEngine by Jerome Mouton
+and about the new Google Drive SDK by Nicolas Garnier. Would love to
+play with these at some point.
+
+The rest of Saturday was spent chatting and getting to know people,
+until at some point I mentioned working with [Go](http://golang.org/)
+at [Nhumi](http://nhumi.com/) and people got very interested. Almost
+everyone had read about it, but no one had used it. There happened to
+be a free slot left for a codelab on Sunday morning, so I soon found
+myself with a job to do. 
+
+Since I didn't have much time I just roughly followed the
+[Tour of Go](http://tour.golang.org/), skipping ahead a little
+sometimes. This was a good decision as the Go devs have put a lot of
+thought into its structure. In addition, I made just six
+[slides summarizing some Go essentials from my point of view](https://docs.google.com/presentation/d/1ZOgBTvAoveph4NneI05dV20qn7YUbQeioaEP0D8_4uU/edit?usp=sharing).
+This was my "main points about Go" slide:
+
+  - Fun and productive
+  - Interfaces
+  - Different "OO": embedded structs, methods
+  - Concurrency
+
+I gave a code example for each of the latter three points. The
+audience of about 20 seemed to follow along easily and there were
+plenty of questions. It was neat to respond to questions and remarks
+directly by demonstrating things live in the
+[Go Playground](http://play.golang.org/).
+
+Thanks everyone for coming, and have fun with Go!

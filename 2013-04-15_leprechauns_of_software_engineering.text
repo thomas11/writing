@@ -1,0 +1,67 @@
+title: "The Leprechauns of Software Engineering" by Laurent Bossavit
+blurb: An amazing little book about a deep but not widely recognized problem in software development: "How folklore turns into fact and what to do about it". Strongly recommended.
+categories: Books
+
+I'll let the author introduce
+[the book](https://leanpub.com/leprechauns) himself:
+
+> The software profession has a problem, widely recognized but which
+> nobody seems willing to do anything about. You can think of this
+> problem as a variant of the well known "telephone game", where some
+> trivial rumor is repeated from one person to the next until it has
+> become distorted beyond recognition and blown up out of all
+> proportion.
+
+> Unfortunately, the objects of this telephone game are generally
+> considered cornerstone truths of the discipline, to the point that
+> their acceptance now seems to hinder further progress.
+
+[Bossavit](https://twitter.com/Morendil) researches the origin and the
+facts behind some of these cornerstone beliefs such as the 10x
+variation in productivity between developers and the famous
+cost-of-change curve. What he finds isn't pretty: often, there are
+hardly any facts.
+
+Methodically, Bossavit follows reference after reference of the
+publications making these widely believed claims. He shows examples of
+"telephone game" where sources are misrepresented or exaggerated,
+either through careless reading or through bending them into shape for
+one's own theories.
+
+For instance, in chapter seven, "Chapter 7: Who’s Afraid of The Big
+Bad Waterfall?", Bossavit shows how the now infamous, rigid waterfall
+development methodology is commonly attributed to the 1970 paper
+"Managing the Development of Large Software Systems" by Winston Royce.
+He shows how there are now two camps interpreting this paper quite
+differently. Agile revisionists say Royce actually tried to show how
+such a rigid process must fail and how an iterative and incremental
+one is superior. Defenders of more structured approaches say Royce's
+process was misrepresented and, while it uses a formal lifecycle
+model, is not as inflexible as it's made out to be. The problem is,
+according to Bossavit both camps are wrong. For starters, the term
+"waterfall" does not appear once in Royce's paper. Also, Royce does
+affirm that he considers the sequential waterfall model sound, but
+only if iterative loops are added between certain phases.
+
+This is one of those books where you could quote every other
+paragraph. I was shocked by how dangerously misrepresented some
+studies were in papers citing them, and gripped by Bossavit's
+methodical deconstruction of the issues. Misleading graphs get a good
+treatment: "You should cultivate a reflex of always asking this
+question: what does one data point on this curve represent?".
+Similarly, fishy statistics abound.
+
+Every programmer ought to read this book to become aware of how shaky
+the underpinnings of some central beliefs of our profession are. Of
+course, one should not throw the baby out with the bathwater: a claim
+can be true even if a particular paper supporting it is not solid.
+Nevertheless, the book opened my eyes to an issue I wasn't really
+aware of before. As Bossavit says: "But we have now reached the most
+pressing problem in software engineering: low standards for research
+publications." After reading his book, I must agree.
+
+My former colleague [Jerven](https://twitter.com/jervenbolleman) made
+me aware of this book, thanks!
+["The Leprechauns of Software Engineering"](https://leanpub.com/leprechauns)
+is available directly from the author via Leanpub, in DRM-free
+formats.

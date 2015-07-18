@@ -1,0 +1,61 @@
+title: dwmstatus in Go
+blurb: I ported dwmstatus to Go, a utility to set the title of the X root window, which dwm uses to set the content of the status bar.
+categories: Go
+
+Recently I tried out the minimalist [dwm](http://dwm.suckless.org/)
+window manager. I don't know yet if I'll stick with it, but it gave me
+a nice excuse to hack a bit of Go.
+
+Like most window managers, dwm has a status bar that can show useful
+information like time and date, battery status etc. It uses a simple
+and clever approach to set the contents of the status bar: it's simply
+the title of the normally invisible X root window. So all we need is a
+simple utility that periodically generates a string and sets it as the
+root window title.
+
+dwm comes with a little C program that does just that,
+[dwmstatus](http://dwm.suckless.org/dwmstatus/). I thought it'd be a
+fun little exercise to do the same in Go, using Andrew Gallant's
+[xgb](http://godoc.org/github.com/BurntSushi/xgb) package. It was a
+pleasure to use, works as advertised and closely follows the XGB
+protocol so that all the documentation out there still applies.
+
+The result is
+[github.com/thomas11/dwmstatus](https://github.com/thomas11/dwmstatus),
+with a whopping 54 lines of code. That's a lot shorter than the 128
+lines of the C version, although that one also displays some default
+content which mine does not. Two things stood out to me that made the
+Go implementation clear and easy to write.
+
+The `time` package has a great API that uses channels where
+appropriate. The `Tick` function returns a channel that keeps sending
+the current time in the given interval. That let's us write the
+periodic updates to the status bar like this:
+
+	c := time.Tick(interval)
+	for now := range c {
+		genTitle(now, &status)
+		// ...
+	}
+
+Functions are first-class values in Go. That offers a simple and
+convenient way of separating the core functionality of dwmstatus,
+periodically updating the root window title, from generating the
+actual status bar content, where each user might wish to show
+different things. In the Go version I defined a type that's simply a
+function that, given the current time and a buffer, writes the new
+status bar content into the buffer. The main entry function of
+dwmstatus accepts such a function and calls it for each update,
+without knowing anything about it:
+
+    type GenTitleFunc func(now time.Time, b *bytes.Buffer)
+    ...
+    // Start the process of updating the status bar. genTitle will
+    // be called repeatedly in the given interval.
+    func Run(interval time.Duration, genTitle GenTitleFunc) {
+        // ...
+    }
+
+There's a sample implementation of `GenTitleFunc` in dwmstatus/main.go
+that I use on my Linux system to show time and date and the battery
+status.

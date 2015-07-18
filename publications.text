@@ -1,0 +1,51 @@
+title: Publications
+static: true
+
+Most of the publications listed here are in text mining and ontology
+design. I worked on this at Karlsruhe Institute of Technology under
+[René Witte](http://www.rene-witte.net/). I owe him much gratitude for
+letting me get involved in this research as an undergrad and coaching
+me through my first contributions. My involvement in the publications
+from 2008 onward was minimal, they build on earlier work I was
+involved in.
+
+*2011-08* N. Naderi, T. Kappler, Ch. J. O. Baker, and R. Witte.  
+*[OrganismTagger: Detection, Normalization, and Grounding of Organism
+Entities in Biomedical Documents.](http://www.semanticsoftware.info/biblio/organismtagger-bioinformatics2011)*   
+Bioinformatics, vol. 27, no. 19, Oxford University Press.
+
+*2011-07* Sporleder, C., A. van den Bosch, and K. Zervanou (Eds.), R. Witte, T. Kappler, R. Krestel, and P. C. Lockemann.  
+*[Integrating Wiki Systems, Natural Language Processing, and Semantic Technologies for Cultural Heritage Data Management.](http://www.semanticsoftware.info/biblio/integrating-wiki-nlp-semantics-cultural-heritage)*  
+Language Technology for Cultural Heritage, Springer Berlin Heidelberg.
+
+*2010-02* R. Witte, R. Krestel, T. Kappler, and P. C. Lockemann.  
+*[Converting a Historical Architecture Encyclopedia into a Semantic Knowledge Base.](http://www.semanticsoftware.info/biblio/converting-historical-architecture-encyclopedia-semantic-knowledge-base)*  
+IEEE Intelligent Systems, vol. 25, no. 1.
+
+*2009-10* J. Bolleman and T. Kappler.  
+*[Weekend Triple Billionaire.](http://ceur-ws.org/Vol-559/HighlightPoster1.pdf) [link to PDF of poster]*  
+Semantic Web: Applications and Tools for the Life Sciences 2009, Amsterdam.
+
+*2008-06* R. Witte, T. Gitzinger, T. Kappler, and R. Krestel.  
+*[Semantic Wiki Approach to Cultural Heritage Data Management.](http://www.semanticsoftware.info/biblio/semantic-wiki-approach-cultural-heritage-data-management)*  
+Language Technology for Cultural Heritage Data (LaTeCH 2008), Marrakech, Morocco.
+
+*2007-12* T. Kappler, H. Koziolek, K. Krogmann, and R. Reussner.  
+*[Towards Automatic Construction of Reusable Prediction Models for
+Component-Based Performance Engineering.](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.84.955)*  
+Proc. Software Engineering 2008, ser. LNI, vol. 121.
+
+*2007-09* R. Witte, T. Kappler, and Ch. J. O. Baker.  
+*[Enhanced Semantic Access to the Protein Engineering Literature using Ontologies
+Populated by Text Mining.](http://www.semanticsoftware.info/biblio/enhanced-semantic-access-protein-engineering-literature-using-ontologies-populated-text-minin)*  
+International Journal of Bioinformatics Research and Applications (IJBRA), vol. 3, no. 3, 2007.
+
+*2006-12* R. Witte, T. Kappler, and Ch. J. O. Baker.  
+*[Ontology Design for Biomedical Text Mining.](http://www.semanticsoftware.info/biblio/ontology-design-biomedical-text-mining)*  
+Semantic Web: Revolutionizing Knowledge Discovery in the Life Sciences, Springer, 2007.
+
+*2005-11* R. Witte, P. Gerlach, M. Joachim, T. Kappler, R. Krestel, and
+P. Perera.  
+*[Engineering a Semantic Desktop for Building Historians and Architects.](http://www.semanticsoftware.info/biblio/engineering-semantic-desktop-building-historians-and-architects)*  
+Proceedings of the Semantic Desktop Workshop at the ISWC, volume 175 of 
+CEUR Workshop Proc., p. 138–152, 2005.

@@ -1,0 +1,36 @@
+title: Go and five other languages at WebTuesday Zurich
+blurb: The last Zurich WebTuesday was fun. Six speakers presented six languages in seven minutes each. I did Go.
+categories: Meetups, Go, Presenting
+
+This past June, fellow Zurich hacker [Ivan](http://ivanjovanovic.com/)
+organized a cool [WebTuesday](http://www.webtuesday.ch):
+[seven languages in seven minutes each](http://webtuesday.ch/meetings/20130611/).
+We ended up with six languages due to a last-minute cancellation, but
+that doesn't detract from the idea: exposing people to different
+programming paradigms, styles, and tool chains in rapid succession to
+expand their horizons and to foster discussion. I think it worked out
+very well.
+
+Please see [the announcement](http://webtuesday.ch/meetings/20130611/)
+for the speaker list and the full program.
+
+All the presentations were great. Thanks to the speakers who put in the
+effort to make them fun!
+
+<img src="/static/posts/2013-07-12_go_and_five_other_languages_at_webtuesday/impression.jpg" />
+
+For my Go presentation, I made a
+[few simple slides](/static/posts/2013-07-12_go_and_five_other_languages_at_webtuesday/slides/go-seven-minutes.html).
+The vintage boxer pic refers to Ivan's characterization of Go that I
+can agree with: somewhat old-fashioned but packing a good punch.
+
+The structure of my presentation is simple. After exposing the
+audience to the syntax with a Hello World, I address concurrency
+through goroutines, channels, and select. Then I give some quick
+examples of how Go makes program design easy with its clever types,
+interfaces and embedded structs.
+
+I think people liked it and I had some good conversations afterwards.
+The interest in Go as well as other lesser-known languages has
+definitely developed in the Zurich tech scene, and I think we'll see
+interesting stuff in the months to come.

@@ -1,0 +1,23 @@
+title: How to serve a static directory with Plack
+blurb: From directory to http://localhost:5001/page.html as simply as possible.
+categories: Perl, Nitty Gritty
+
+You have a directory containing HTML files and would like to browse it
+locally. There are absolute links like `/static/site.css` in the HTML,
+so just opening index.html would break those links.
+
+Perl's recent web superstar module [Plack](http://plackperl.org/) can
+do it easily.
+
+Create a file named `plack.psgi` with the following content:
+
+    !highlight perl
+    #!/usr/bin/env perl
+
+    use Plack::App::File;
+
+    my $root = "/path/to/dir;
+    my $app = Plack::App::File->new(root => $root)->to_app;
+
+Then launch the `plackup` utility by `plackup -a plack.psgi --port
+5001`--that's it!

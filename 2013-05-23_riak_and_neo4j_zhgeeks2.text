@@ -1,0 +1,89 @@
+title: Riak and Neo4j @zhgeeks
+blurb: We had two great zhgeeks meetups recently: Sean Cribbs spoke about Riak and eventual consistency, and Jim Webber presented Neo4j. Sean's talk was also an intro to distributed systems with a list of foundational papers that I list in this post.
+categories: Meetups, Databases
+
+This past April we at [zhgeeks](http://www.meetup.com/zhgeeks/) had
+the opportunity to host two great database-centric meetups.
+
+As an aside, I can now say "we" because
+[Muharem Hrnjadovic](https://twitter.com/al_maisan), founder and
+organizer of zhgeeks, added me as a co-organizer. Make no mistake, I
+didn't do much so far and all credit for zhgeeks goes to Muharem. I
+will get more involved in organizing future meetups, though. We have a
+couple of good ideas, by the way, so stay tuned!
+
+First, [Jim Webber](http://jimwebber.org/), Chief Scientist at
+[Neo Technology](http://www.neotechnology.com/), presented
+[Neo4j and connected data](http://www.meetup.com/zhgeeks/events/97436192/).
+This was a relatively high-level talk where Jim spent the first half
+or so on pointing out use cases for graph databases and the problem
+domains for which they are best suited---not surprisingly, domains
+with highly interconnected data. Later on Jim showed Neo4J's new query
+language Cypher, which is a very expressive textual query language for
+graphs.
+
+<img src="/static/posts/2013-05-23_riak_and_neo4j_zhgeeks2/jim webber zhgeeks.jpg" />
+
+Jim's a great speaker with lots of wit and plenty of humorous slides.
+The audience---one of the largest we had so far at zhgeeks---was
+captured.
+
+After Jim's presentation we had a brief talk by Florian Müller,
+co-founder of [jooik](http://jooik.com/), about how they use Neo4j in
+their startup. It's always a pleasure to hear of that kind of
+real-world experience.
+
+Later in April we had [Sean Cribbs](http://seancribbs.com/) from
+[Basho](http://basho.com/), makers of the
+[Riak](http://basho.com/riak/) distributed database, presenting
+[Understanding Eventual Consistency and Riak](http://www.meetup.com/zhgeeks/events/107680222/).
+This was again an awesome talk. Sean wasn't afraid to go into some
+technical details of distributed systems which I appreciated very
+much. He structured the talk as a tour of some of the most influential
+papers in distributed systems, pointing out how Riak implements each
+technique and deals with the trade-offs involved. I found this to be a
+great overview of the field, so I made a list of the papers and
+resources Sean mentioned.
+
+  - Sean recommends the
+    [Paper Trail](http://the-paper-trail.org/blog/) blog by Henry
+    Robinson that has great write-ups on important topics in
+    distributed systems.
+  - Fischer, Lynn, Patterson 1985:
+    [Impossibility of Distributed Consensus with One Faulty Process (pdf)](http://cs-www.cs.yale.edu/homes/arvind/cs425/doc/fischer.pdf)
+    introduces the "FLP impossiblity": in an asynchronous setting
+    there is no distributed algorithm that solves the consensus
+    problem of several nodes agreeing on a common value. Paper Trail
+    has a
+    [good post](http://the-paper-trail.org/blog/a-brief-tour-of-flp-impossibility/)
+    on this paper.
+  - Fox, Brewer 1999:
+    [Harvest, yield, and scalable tolerant systems (pdf)](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.24.3690&rep=rep1&type=pdf)
+    focuses on what kind of compromises a distributed system can make
+    in case of node failures or partitions. Yield is the probability
+    of completing a request and harvest is a measure of the accuracy
+    of the response, defined as the fraction of the existing data the
+    system used to come up with the response. Coda Hale wrote a great
+    [overview article on Harvest, yield and the CAP theorem](http://codahale.com/you-cant-sacrifice-partition-tolerance/).
+  - Finally, Sean touched on Leslie Lamport's work on safety and
+    liveness of distributed systems in his 1977 paper
+    [Proving the Correctness of Multiprocess Programs](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.137.9454).
+    Sean did a great job of relating Lamport's results to currently
+    existing algorithms and systems. The basic question is, if you
+    have F failures, how many nodes that are still up do you need to
+    respond? If you need F + 1 (at least one), it is an eventually
+    consistent system. A majority of nodes, 2F + 1, corresponds to
+    [Paxos](http://research.microsoft.com/users/lamport/pubs/pubs.html#paxos-simple)
+    and two-phase-commit. A super majority, 3F + 1, is called
+    [Byzantine fault tolerance](http://en.wikipedia.org/wiki/Byzantine_fault_tolerance).
+  - Riak itself is heavily based on the
+    [Amazon dynamo paper (pdf)](http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf).
+
+Finally, Sean recommended the talk
+[data structures in Riak](http://vimeo.com/52414903).
+
+A question from the audience was what other solutions in the
+bewildering space of distributed systems and databases were similar to
+Riak. Among the open source ones Sean thought
+[Voldemort](http://www.project-voldemort.com/voldemort/) to be the
+closest, followed by [Cassandra](http://cassandra.apache.org/).

@@ -1,0 +1,288 @@
+title: Coursera Machine Learning with Andrew Ng
+blurb: I took the recent online machine learning class with Coursera. It was a good experience and I learned a lot. Here are some notes and observations.
+categories: AI&ML, Courses
+
+Machine Learning is on my radar of things to learn since a long time.
+After all, I'm already kind of a data guy in software development, but
+I'm not very strong on the analysis and classification side.
+
+Professor
+[Andrew Ng of the Stanford AI lab](http://ai.stanford.edu/~ang/)
+offers a
+[Coursera class in Machine Learning](https://class.coursera.org/ml-003/class/index).
+I took the recent class from April to June 2013.
+
+The class was a great experience. I found the lectures to be clear and
+the content made perfect sense as an intro to machine learning. The
+pace was often a bit slow for my taste, since I already knew the
+required math, but this was easily fixed by watching the lectures at a
+higher speed. The Coursera online video player offers this convenient
+feature including resampling so the voice doesn't sound funny.
+
+This was the syllabus:
+
+- Linear Regression with One Variable
+- Linear Regression with Multiple Variables
+- Logistic Regression
+- Regularization
+- Neural Networks: Representation
+- Neural Networks: Learning
+- Advice for Applying Machine Learning
+- Machine Learning System Design
+- Support Vector Machines (SVMs)
+- Clustering
+- Dimensionality Reduction
+- Anomaly Detection
+- Recommender Systems
+- Large-Scale Machine Learning
+- Example of an application of machine learning
+
+Each lecture had a homework assignment to go with it, where we
+implemented the algorithms in Octave. This was crucial to properly
+understand them, and to remember at least the gist of everything. It's
+too easy to zone out when watching a lecture and to convince yourself
+afterward that you got it. In addition, I had never used Octave (or
+Matlab) before and I now realize how useful it is for quick
+development of mathematical code.
+
+Below are some of my class notes. They are neither complete nor
+formatted well or checked for correctness, so you’d be better off
+taking the class yourself! The last two lectures are missing because I
+had too much other things going on.
+
+----
+
+Really nice intro lectures with lots of motivation and an accessible
+explanation of supervised vs. unsupervised learning.
+
+### Notation
+
+    m := number of training examples
+    x's := input variables
+    y's := output variables
+    h := hypothesis := learning algorithm. h(x) = y.
+
+### Linear regression with one variable
+
+`h(x) = t0 + t1*x` --- univariate linear regression, straight line.
+
+Fitting h is a minimization problem over the sum of all x's. For each
+x, minimize the square of the difference between y and h(x). We divide
+that sum by 2m to average. This cost function is called square error
+and is written J(t0, t1).
+
+*Gradient descent* solves linear regression. Repeat until convergence:
+
+    t_j := t_j - alpha( (delta/delta*t_j) * J(t0, t1) )
+
+Alpha is a learning rate. t0 and t1 must be updated simultaneously,
+assigning to temp variables.
+
+*Batch gradient descent* means we look at all training examples for
+each step.
+
+### Linear regression with more than one variable
+
+Generalized gradient descent: `h(x) = theta' * x = t0x0 + t1x1 + ...`.
+We set x0 to 1 always. The parameters t0, t1, ... form a vector theta.
+
+The cost function is then `J(theta) = 1/2m * sum_m( (h(x_i)-y_i)^2 )`.
+
+The update step is `t_j = t_j - alpha * der(t_j) * J(theta)`.
+
+Scaling gradient descent to make it converge much faster: scale the
+x_i by doing `(x_i - avg(x))/range(x)` where range is max - min.
+
+If gradient descent runs correctly, J(theta), the cost function,
+should decrease after every step. If it's increasing or oscillating
+it's usually a too large alpha. Plotting the cost function over the
+number of iterations helps debugging.
+
+Ng recommends starting with 0.001 and increasing threefold to 0.003,
+0.01 and so on.
+
+### Solving linear regression with the normal equation
+
+Solving theta analytically. Construct a matrix X (*design matrix*)
+that is the table of feature values in the training data, with the
+columns being x0 (=1), x1, etc. X is an m x (n+1) matrix (n for n
+features, +1 for x0). Correspondingly, take y to be the vector of
+targets in the training data.
+
+Theta is then `(X' X)^-1 X' y`. In Octave: `pinv(X'*X) * X' * y`.
+
+
+### Classification with logistic regression
+
+Result variable y of {0, 1}, *negative class* and *positive class*.
+
+Linear regression could be used by setting a threshold for the
+classifier h_theta. But outliers will greatly influence the
+classifier.
+
+In logistic regression (which is actually a classification algorithm),
+the prediction h_theta is always between 0 and 1. We call it
+hypothesis and interpret it as the probability that y=1 on input x:
+`h_theta(x) = P(y=1 | x; theta)`.
+
+Where in linear regression h_theta(x) was `theta'*x`, it is now
+`g(theta'*x)`. g is called the *sigmoid function* or *logistic
+function* and is defined as `g(z) = 1 / 1+e^-z`. It asymptotes at 0 on
+the left and 1 at the right and is 0.5 at zero.
+
+We predict the hypothesis to be true when g(z) >= 0.5, which happens
+when z >= 0, where z is theta'*x.
+
+The *decision boundary* is the line drawn by `theta'*x >= 0`. It is a
+property of the hypothesis, not of the data set, so we need to fit the
+parameters to the training set.
+
+For non-linear decision boundaries, we can introduce polynomial
+features such as x2^2 (and possibly delete the linear ones by setting
+their parameter in theta to 0). For example, `x1^2 + x2^2 = 1` is a
+circle of radius 1.
+
+The cost function we used for linear regression, half of the squared
+error, is not convex when used with logistic regression. That means
+gradient descent will get stuck in local minima. Instead, we use the
+convex function `Cost(h_theta(x), y) = -log(h_theta(x)) if y=1,
+-log(1-h_theta(x)) if y=0`. This is equivalent to `-y*log(h(x)) -
+(1-y)*log(1-h(x))`.
+
+The overall cost J(theta) is then `1/m sum_i_m Cost(h_theta(x_i),
+y_i)`. It can be derived statistically through maximum likelihood
+estimation.
+
+For gradient descent, we take the derivative of J as usual, ending up
+with `theta_j = theta_j - alpha * sum_i_m((h(x_i) - y_i) * xj_i)`.
+This is identical to linear regression!
+
+Feature scaling applies to logistic regression just as it does to
+linear regression.
+
+### More sophisticated algorithms than gradient descent
+
+  - conjugate gradient
+  - BFGS
+  - L-BFGS
+  
+They figure out the learning rate on their own and converge faster,
+but are more complex.
+
+In Octave xthere's `fminunc`---function minimization unconstrained.
+
+
+### Regularization
+
+Underfitting = high bias. Polynomial of too low degree in logistic
+regression.
+
+Overfitting = high variance. Polynomial of too high degree in logistic
+regression. Happens with too many features.
+
+When we have a lot of features, plotting the classifier is impossible
+and it becomes hard to detect overfitting. Later we'll see *model
+selection* to decide which features to discard.
+
+Discarding features loses information. Instead, we can employ
+*regularization*. The idea is to penalize the features (thetas):
+multiply them with a big factor in the cost function forces the
+minimization to make them really small. J(theta) becomes `1/2m
+sum_i_m(h(xi)-yi)^2 + lambda sum_j_n(theta_j^2)`. Lambda is the
+regularization factor. The derivative of the added lambda term used in
+the update step is `lambda/m * theta_j`. It doesn't depend on the i in
+the sum, so it can be pulled out.
+
+Using the normal equation, lambda is simply applied to the feature
+matrix.
+
+
+## Neural networks
+
+Logistic regression blows up with lots of features. There are about
+O(n²) terms if we include only the second-order terms x1x2, x1x3 etc.,
+and O(n³) terms if we include the cubic terms.
+
+Some terminology:
+
+ - *neuron* or *bias unit*
+ - input wires x1, ..., xn, plus x0 = 1.
+ - output is h_theta(x) = 1 / (1+e^(-theta'*x)), the sigmoid function,
+   here *activation function*.
+ - theta are the parameters or *weights*
+ - input layer, hidden layers (neither x nor y), output layers
+
+Theta is a matrix since the neural network has a matrix structure (one
+column per layer). If layer j has sj units, and layer k has sk
+units, then theta_j is of dimension sk x sj+1. For example, with
+j=k=2, `activation(i, k) = g(theta(i,0)*x0 + theta(i,1)*x1 +
+theta(i,2)*x2)`.
+
+Neural networks are basically several layers of logistic regression.
+It learns the features from the basic input features x1, x2, ....
+
+The layers, their size etc. are called the architecture of a neural
+network.
+
+To learn theta, we first need a cost function. The cost function is a
+generalization of the one for logistic regression. For K output units,
+we compute h_theta(x) for k = 1,...,K. We're taking the kth output
+unit and compare it to y_k.
+
+Back propagation: let delta_j_l be the error of node j in layer l. For
+the output layer L, `delta_L = a_L - y` (vectorized for all nodes in
+the layer). For the previous layers l, `delta_l = (Theta_l' *
+delta_l+1) .* g'(z_l)`. The derivative of the sigmoid at z_l is `a_l
+.* (1-a_l)`. There is no delta_1 since this is the input. We start at
+L and go back to 2.
+
+The back propagation algorithm is then: for each training example (xi,
+yi) do
+
+  1. Set a1 = xi
+  2. Perform forward propagation to compute a_l for l = 2,...,L.
+  3. Compute the error delta_L = a_L - y_i.
+  4. Compute delta_(L-1), ..., delta_2. `DELTA_ij_l = DELTA_ij_l +
+     a_j_l*delta_i_(l+1)`. The latter expression is vectorized as
+     `DELTA_l = DELTA_l + delta_(l+1)*a_l'`.
+
+Then, `DELTA/m` is the partial derivative of the cost function.
+
+
+## Machine Learning Diagnostics
+
+Your ML approach isn't working so well. What's wrong?
+
+Split data into training and test set, approx. 70 to 30. After
+learning, calculate the average square error on the test set (linear
+regression).
+
+To choose between different models, such as different order
+polynomials for regression, we can learn using each candidate model on
+the training set and choose the one performing best on the test set.
+However, our error will now be optimistic because we picked the best
+model for the test set. To avoid this, we use a third data set for
+cross-validation. We test the model hypotheses on the validation set
+and then estimate the generalization error using the test set.
+
+If performance is not good enough, we need to distinguish between
+underfitting (high bias) and overfitting (high variance). In case of a
+bias problem, both the training and the cross-validation error are
+high. In case of high variance, the training error is low (because the
+training set fits very well), but the cv error is high.
+
+Large learning parameters (lambda) will lead to high bias (underfit),
+small ones to high variance.
+
+
+## How to approach an ML problem
+
+1. Partition the data into training, test, cv.
+2. Start with a simple algorithm and validate it.
+3. Plot learning curves (comparing average squared error of test and
+   cv set) to see whether there is high variance or high bias and
+   therefore whether more examples, more features etc. are going to
+   help.
+4. Error analysis: manually examine the erroneous examples in the cv
+   set to spot any systematic errors.
+
