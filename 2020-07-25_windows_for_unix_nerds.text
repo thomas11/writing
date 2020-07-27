@@ -1,9 +1,12 @@
-title: Windows for Unix nerds
+title: Windows and Powershell for Unix nerds
 blurb: A few years ago I joined Microsoft and started to work with .Net on Windows, coming from years of only using Linux. Here are some tips I learned along the way.
 categories: Windows, Tools
 date: 2020-07-21
-flags: draft,toc
+flags: toc
 
+<div style="padding-top: 1em">
+Looking back, it's funny how easily I've settled in to the Windows world. In college, I was the guy with the Linux shirts and a crush on GNU and the FSF. (I still think both have done lots of excellent work.) Thank you, Satya, for making Microsoft that much more appealing.
+</div>
 
 ## Windows
 
@@ -11,11 +14,12 @@ Honestly, after years of using Windows almost exclusively I'm still not a fan, w
 
 Mind you, Windows works fine. I don't think about it much. The hardware and screen resolution support is great as you'd expect. Mandatory reboots used to be bad but are much reduced now.
 
-It's just too GUI-focused. I miss poking around internals and setting up everything the way I like and trying different window managers. Ah, Linux.
+It's just too GUI-focused and full of obscure corners and inconsistencies (ok, not much different from Linux). I miss poking around internals and setting up everything the way I like and trying different window managers. Ah, Linux.
 
-My main actual issue is performance (I can't even think of the ads...). The kernel might be ok, but anti-malware and search indexing and a dozen other processes constantly blasting away in the background take a notable toll. Search can be turned off, of course. In general, it feels a little sluggish.
+My main actual issue is performance. (Don't even get me started on the ads but at least you can easily turn them off.). The kernel might be ok, but anti-malware and search indexing and a dozen other processes constantly blasting away in the background take a notable toll. Search can be turned off, of course. In general, it feels a little sluggish.
 
 You should *not* turn off the built-in Defender security scans. However, for developers it can be a huge pain because your project changes every time you edit and build, and the scanner scans the new files, over and over. If you feel confident that no baddies can sneak in there, you can exclude folders from the Defender scan.
+
   - Launch "Edit Group Policy" from Start Menu
   - Go To: Administrative Templates -> Windows Components -> Windows Defender -> Exclusions
   - Double Click Path Exclusions
@@ -31,6 +35,7 @@ Windows has it built in. Hit Windows-V instead of Ctrl-V and a little window wit
 ### Shortcuts
 
 There are plenty, of course. The ones I use constantly are
+
   - Windows-Tab: visual overview of open windows
   - Alt-Tab: switch between windows
   - Windows-Up: maximize/unmaximize window
@@ -56,12 +61,13 @@ I've written about [Ack](/2015-09-09_favorite tools_ack.html) before and how it'
 Powershell is a funny beast when you're used to Bash. Believe it or not, though, I've become a fan. What I love about it is that it's more of a "real" programming environment, while still being a very usable shell.
 
 What makes it real programming environment?
+
   - Pipes transport typed objects, not just strings. This alone is huge.
   - It has more handy built-ins, like for parsing JSON.
   - It has built-in standard ways to implement common functionality like progress bars, `-Verbose`, `-WhatIf`.
   - Function arguments can be typed and can be made mandatory or optional.
   - Seamless interoperability with .Net. Load any DLL and call its static methods, instantiate its objects (as real typed objects in the shell), or access its constants.
-    - A module system to package, load, and unload functionality.
+  - A module system to package, load, and unload functionality.
 
 By the way, just ignore the Windows command prompt (`cmd`). It's awful and pointless with Powershell being present by default. Sadly, it's still used in many docs and tutorials.
 
@@ -70,7 +76,7 @@ Whole books have been written about Powershell, so below are simply my slighlty 
 
 ### Basics
 
-If you come from *Nix, you can start by using the basic shell commands you know. Their equivalents have a different name in PS, but PS comes with pre-defined aliases mapping the nix names to the PS names.
+If you come from *Nix, you can start by using most of the basic shell commands you know like `ls`. Their equivalents have a different name in PS, but PS comes with pre-defined aliases mapping the nix names to the PS names.
 
 Each Powershell function supports the "common parameters", such as `-Verbose`. Full docs at `help about_CommonParameters`.
 
@@ -81,7 +87,6 @@ Dash-parameters can be abbreviated as long as they are unique, e.g. `-re` for `-
 
 | Bash  | Powershell
 | ----- | ----------
-| &&    | This one is annoying since it's verbose and modifies global state: `$ErrorActionPreference='Stop'; cmd1; cmd2`
 | cat   | `gc` (alias of `Get-Content`)
 | cut   | No direct equivalent, but because PS passes typed objects through pipes, it's rarely needed. See [What is an equivalent of *Nix 'cut' command in Powershell?](http://stackoverflow.com/questions/24634022/what-is-an-equivalent-of-nix-cut-command-in-powershell) for some options.
 | find  | `gci -Recurse` (alias of `Get-ChildItem`)
@@ -95,6 +100,7 @@ Dash-parameters can be abbreviated as long as they are unique, e.g. `-re` for `-
 | uniq  | `Get-Unique`
 | wc -l | `measure -line`
 | which | `Get-Command` (no alias; `gc` is used for `Get-Content`)
+| &&    | This one is annoying since it's verbose and modifies global state: `$ErrorActionPreference='Stop'; cmd1; cmd2`
 
 
 ### Iterating and querying
