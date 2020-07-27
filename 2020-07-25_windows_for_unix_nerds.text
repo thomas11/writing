@@ -1,0 +1,194 @@
+title: Windows for Unix nerds
+blurb: A few years ago I joined Microsoft and started to work with .Net on Windows, coming from years of only using Linux. Here are some tips I learned along the way.
+categories: Windows, Tools
+date: 2020-07-21
+flags: draft,toc
+
+
+## Windows
+
+Honestly, after years of using Windows almost exclusively I'm still not a fan, whereas C# and Powershell have really impressed me.
+
+Mind you, Windows works fine. I don't think about it much. The hardware and screen resolution support is great as you'd expect. Mandatory reboots used to be bad but are much reduced now.
+
+It's just too GUI-focused. I miss poking around internals and setting up everything the way I like and trying different window managers. Ah, Linux.
+
+My main actual issue is performance (I can't even think of the ads...). The kernel might be ok, but anti-malware and search indexing and a dozen other processes constantly blasting away in the background take a notable toll. Search can be turned off, of course. In general, it feels a little sluggish.
+
+You should *not* turn off the built-in Defender security scans. However, for developers it can be a huge pain because your project changes every time you edit and build, and the scanner scans the new files, over and over. If you feel confident that no baddies can sneak in there, you can exclude folders from the Defender scan.
+  - Launch "Edit Group Policy" from Start Menu
+  - Go To: Administrative Templates -> Windows Components -> Windows Defender -> Exclusions
+  - Double Click Path Exclusions
+  - Click enable and add your paths, then click OK, OK, OK
+
+
+### Clipboard
+
+Without fail, people who watch me work ask me about this when it pops up. Clipboard history is a super power that saves you so much window switching and cognitive overhead (where was that string again?) when you're used to it.
+
+Windows has it built in. Hit Windows-V instead of Ctrl-V and a little window with the history pops up. Select an entry and Enter pastes it, Shift-Enter pastes it without formatting.
+
+### Shortcuts
+
+There are plenty, of course. The ones I use constantly are
+  - Windows-Tab: visual overview of open windows
+  - Alt-Tab: switch between windows
+  - Windows-Up: maximize/unmaximize window
+  - Windows-Left/Right: fit window to left/right half of the screen. This one is neat because it also pops up miniatures of other windows so you can select one to take up the other half of the screen. Just hit Esc if you don't want to. If you do, the two windows are paired and if you make one horizontally larger, the other one shrinks accordingly.
+  - Ctrl-Windows-left/right: switch between virtual desktops. Yes, Windows has them now! On the Windows-Tab window overview you can drag and drop windows between desktops.
+
+
+## Tools
+
+### WSL
+
+With version 2, the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about) has become a gem. It's easy to use and powerful. I'm not that experienced with it, so I'll leave it at that, but you should definitely install it and try it out.
+
+### Ripgrep
+
+[**ripgrep**](https://github.com/BurntSushi/ripgrep) is a better grep on any system, but Windows doesn't even have grep, just the wonky `sls`, so ripgrep becomes a must have. Easy to install with a pre-built binary.
+
+I've written about [Ack](/2015-09-09_favorite tools_ack.html) before and how it's better than grep. Ripgrep is similar but faster and easier to install. Try it out!
+
+
+## Powershell
+
+Powershell is a funny beast when you're used to Bash. Believe it or not, though, I've become a fan. What I love about it is that it's more of a "real" programming environment, while still being a very usable shell.
+
+What makes it real programming environment?
+  - Pipes transport typed objects, not just strings. This alone is huge.
+  - It has more handy built-ins, like for parsing JSON.
+  - It has built-in standard ways to implement common functionality like progress bars, `-Verbose`, `-WhatIf`.
+  - Function arguments can be typed and can be made mandatory or optional.
+  - Seamless interoperability with .Net. Load any DLL and call its static methods, instantiate its objects (as real typed objects in the shell), or access its constants.
+    - A module system to package, load, and unload functionality.
+
+By the way, just ignore the Windows command prompt (`cmd`). It's awful and pointless with Powershell being present by default. Sadly, it's still used in many docs and tutorials.
+
+Whole books have been written about Powershell, so below are simply my slighlty polished notes that I took when i learned something I wanted to remember or reference later. I hope the selection is useful to others coming from *Nix.
+
+
+### Basics
+
+If you come from *Nix, you can start by using the basic shell commands you know. Their equivalents have a different name in PS, but PS comes with pre-defined aliases mapping the nix names to the PS names.
+
+Each Powershell function supports the "common parameters", such as `-Verbose`. Full docs at `help about_CommonParameters`.
+
+Dash-parameters can be abbreviated as long as they are unique, e.g. `-re` for `-Recursive`.
+
+
+### Bash commands/expressions and their equivalents
+
+| Bash  | Powershell
+| ----- | ----------
+| &&    | This one is annoying since it's verbose and modifies global state: `$ErrorActionPreference='Stop'; cmd1; cmd2`
+| cat   | `gc` (alias of `Get-Content`)
+| cut   | No direct equivalent, but because PS passes typed objects through pipes, it's rarely needed. See [What is an equivalent of *Nix 'cut' command in Powershell?](http://stackoverflow.com/questions/24634022/what-is-an-equivalent-of-nix-cut-command-in-powershell) for some options.
+| find  | `gci -Recurse` (alias of `Get-ChildItem`)
+| head  | `gc file \| select -first 10`
+| jq    | Yes, PS can do much of what jq provides out of the box. Parse the JSON first with `ConvertFrom-Json` which gives you an object with the JSON's structure. Then pipe that to whatever filter and transformation commands you need.
+| M-    | Use `$$` as an argument, it evaluates to the last token of the previous command.
+| .profile | The path to the equivalent file is in `$profile`.
+| sum   | `measure -sum`
+| tail  | `gc -tail 10`
+| time  | `Measure-Command`
+| uniq  | `Get-Unique`
+| wc -l | `measure -line`
+| which | `Get-Command` (no alias; `gc` is used for `Get-Content`)
+
+
+### Iterating and querying
+
+Pipe a collection to `?`, alias of `Where-Object`, to filter it.
+
+    $clusters | ? { $_.status -eq 'running' }
+
+Note the automatically defined variable `$_` representing the current object.
+
+Similarly, pipe a collection to `%`, alias of `ForEach-Object`, to do something with each member.
+
+For the common case of iterating and selecting a property of each object, PS has a built-in shortcut: just access the property on the list. Super useful. That is, the two commands below are equivalent:
+
+    $clusters | % { $_.status }
+    $clusters.status
+
+
+### Various tidbits
+
+`-contains` is for collections, `-like` is for strings. But `.Contains()` is often easier.
+
+POST or PUT the content of a file using Invoke-WebRequest: `-Body (gc file.json)`
+
+Arrays:
+
+  - `$docCounts = new-object int[] $indexes.Length`
+  - `@()` creates a new, empty, untyped one
+  - `+=` adds, but internally creates a new array, so slow
+
+Splitting strings: `"".Split("str")` splits by any character in the given string. To split by a whole string, use `-split`. It supports limiting the result size, too: `-split "str", 2`.
+
+
+### PSDrives
+
+PSDrives is a file system provider similar to like Fuse.
+
+    get-psdrive
+    dir alias:
+    dir env:
+
+New-PSDrive creates a new drive mapping.
+
+    New-PSDrive -name Foo -PSProvider FileSystem -Root c:\Demo
+	
+
+### Modules
+
+    Get-Module  # list loaded modules
+    Get-Module -ListAvailable  # list all available modules
+
+After loading one, see what commands it added:
+
+    Get-Command -Module <module>
+
+
+### Object properties
+
+Usually, PS objects have more properties than the shell shows. Use `Get-Member`, alias `gm`, to see them. It will also show methods and events. This is my first step to inspect an object returned from somewhere.
+
+What if you want only one property of an object in a pipe expression? `select` pulls it out.
+
+    $addresses | select LastName
+
+However, you'll notice that you don't get a string with the value of LastName, you get a new object with a single property LastName. This is so that you can `select` multiple properties. But often, you want a single property as a scalar, e.g., to pass it on to a command that takes string input, not object. `select -ExpandProperty` will do that:
+
+    > ($StackTrace | select Length).GetType().Name
+    PSCustomObject
+    > ($StackTrace | select -ExpandProperty Length).GetType().Name
+    Int32
+
+
+### Pitfalls
+
+#### VerbosePreference and other globals
+At some point you will use the `-Verbose` switch but see no verbose output. Or you will not use the switch and see it. What's happening is there's a global variable `VerbosePreference`, and a few other similar ones, that controls this behavior. See `help about_Preference_Variables`.
+
+You have no way of knowing what it's set to without explicitly checking. Ugh. This is a really annoying example of global state.
+
+#### Pretty-printing JSON
+
+    | ConvertFrom-Json | ConvertTo-Json -MaxDepth 20
+
+Note the `-MaxDepth`: the default is only 3, meaning PS will skip all parts of the object structure that are more than three levels deep. That's bound to omit parts of your data, leaving you wondering where the hell it is.
+
+#### Null and the empty string
+Generally, null is null and the empty string is the empty string. However, when function parameters or properties are annotated with types, like `[string]`, Powershell tries to auto-convert argument to the given type. For some strange reason, `$null` becomes the empty string for `[string]` parameters. See [this issue](https://github.com/PowerShell/PowerShell/issues/4616) for details. 
+You need to use `[NullString]` to be explicit.
+
+    $c.Nodes[0].DonorHostname = $null
+    $c.Nodes[0].DonorHostname -eq $null
+    False
+    $c.Nodes[0].DonorHostname -eq ''
+    True
+    $c.Nodes[0].DonorHostname = [NullString]::Value
+    $c.Nodes[0].DonorHostname -eq $null
+    True
