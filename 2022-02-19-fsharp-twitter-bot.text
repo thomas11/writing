@@ -1,0 +1,105 @@
+title: A Twitter bot for COVID vaccination progress in F# on Azure Functions
+flags: 
+blurb: Some commentary and pointers on how I wrote my first F# program, a Twitter bot running on Azure Functions.
+categories: Programming,F#,Azure
+date: 2022-02-19
+
+## About
+
+Back in January 2021 I wrote a little Twitter bot, currently called [*COVID vaccination progress WA*](https://twitter.com/covid_vax_wa), that I never got around to blogging about. Here's [the code](https://github.com/thomas11/covid-vax-tracker).
+
+At the time I was looking for an excuse to use both F# and Azure Functions for a real project, and found it when I got frustrated navigating the Covid vaccination information to get the info I really wanted: how many people are completely vaccinated?
+
+<img src="/static/posts/2022-02-19_fsharp_twitter_bot/Pasted image 20220217194812.png" />
+
+The bot retrieves this number once a day from official CDC data and tweets it out. It can do so for any US state, but currently I'm doing only Washington and the USA as a whole. No one wants to get 51 tweets a day, and creating a bot per state is painful because it requires different Twitter accounts. I think? Didn't research this much.
+
+### Twitter developer account vs bot account
+
+Creating a Twitter developer account was straightforward. There was just one surprisingly hidden bit of information. My developer account is my main Twitter account from which I tweet, which is probably not best practice, but I assume is the case for many hobby projects. But I want the bot to tweet on its own account, how do I do that? - [Stackoverflow has the answer](https://stackoverflow.com/questions/64188365/authenticate-twitter-bot-with-static-secrets/64195317#64195317).
+
+
+## F#, Azure Functions, and VS Code
+
+Honestly, I don't remember exactly how I created the project and set everything up, but it was fairly automated. Development on the Azure and F# tooling in VS code is very active anyway and things might be different from a year ago.
+
+I use [Ionide](https://ionide.io/) for F# development and installed the "Azure Functions" extension, basically following [Develop Azure Functions by using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=csharp). These instructions are for C# but they worked for F# as well, except I ran into an issue with a missing host.json solved by [adding an explicit copy in the fsproj file](https://stackoverflow.com/questions/60501474/why-host-json-not-being-copied-to-output-in-f-azure-functions-project).
+
+The end result is a really nice and convenient integration into VS Code, where I can deploy the function and stream logs directly from a menu. Not exactly automated or reproducible or properly logged but just fine for a hobby project.
+
+<img src="/static/posts/2022-02-19_fsharp_twitter_bot/Pasted image 20220217211211.png" />
+
+The other thing where the Microsoft docs were not clear to me was how exactly the Key Vault integration worked, which I needed for the Twitter API secrets. Daniel's [How to keep secrets safe using Key Vault](https://daniel-krzyczkowski.github.io/Integrate-Key-Vault-Secrets-With-Azure-Functions/) cleared that up quickly.
+
+The function runs on a schedule, which is defined directly on its entry point:
+
+```
+[<FunctionName("TweetCdcDataTimer")>]
+// 8p EST = 1a UTC
+let runTimer ([<TimerTrigger("0 0 1 * * *")>] myTimer: TimerInfo, log: ILogger) =
+    let msg =
+        sprintf "Time trigger function executed at: %A" DateTime.Now
+    log.LogInformation msg
+
+    run log
+```
+
+
+## The Code
+
+It's nothing fancy, but I really enjoyed writing my first real F# program. I feel like it could be factored better, but at the same time it's still easy to read coming back to it after a few months - a testament to F# more than to my beginner code.
+
+### Reading JSON via the type provider
+
+Here's how we create a type that represents the CDC's vaccination:
+
+```
+type CdcData = JsonProvider<Sample="sampleVaxData.json">
+```
+
+Yep, that's it. Just give the [type provider](https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/) a sample. That allows us to query it naturally, e.g., for the completed vaccination percentage for a given location:
+
+```
+let getFullyVaccinatedPercentage (vaxData: CdcData.VaccinationData array) location =
+    let locationRow =
+        vaxData
+        |> Array.where (fun row -> row.Location = location)
+        |> Seq.exactlyOne
+
+    locationRow.SeriesCompletePopPct
+```
+
+### Testing via FsUnit
+
+Honestly, one of the harder part was getting the edge cases of the progress bar right :) It needs to work for all percentages and always have the same number of characters. [The generator function](https://github.com/thomas11/covid-vax-tracker/blob/main/azure_function/twitter.fs#L6) scales the percentage to the number of characters available and use `String.replicate` to make the correct number of characters. I ended up writing a bunch of tests using [FsUnit.Xunit](https://fsprojects.github.io/FsUnit/xUnit.html), which was a nice experience. Defining some helpers, each test is very succinct.
+
+```
+let firstNCharactersShouldBeFilled n bar =
+    bar
+    |> Seq.take n
+    |> Seq.forall (fun c -> c = filled)
+    |> should be True
+
+let charactersFromNShouldBeEmpty n bar =
+    bar
+    |> Seq.skip (n - 1)
+    |> Seq.forall (fun c -> c = empty)
+    |> should be True
+
+// The progress part should be the first n characters
+let shouldBeFilledUntil n bar =
+    firstNCharactersShouldBeFilled n bar
+    charactersFromNShouldBeEmpty (n + 1) bar
+
+[<Fact>]
+let ``progress bar with 0%`` () =
+    progressBar 50 0.0m
+    |> shouldBeFilledUntil 0
+  
+[<Fact>]
+let ``progress bar of length 20 1 completed`` () =
+    progressBar 20 5.0m
+    |> shouldBeFilledUntil 1
+```
+
+Alright, the code is straightforward so I won't repeat more of it here. Browse or check out [the repository](https://github.com/thomas11/covid-vax-tracker)!
