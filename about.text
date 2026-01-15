@@ -7,10 +7,14 @@ flags: static
 
 Hi! I'm Thomas Kappler.
 
-I work for Microsoft Azure on the backend of
-[Cognitive Search.](https://azure.microsoft.com/en-us/services/search/)
+I'm a Senior Software Engineer for [Luware](https://luware.com/). I live in Germany, after Seattle, Zurich, Geneva, Germany.
 
-Seattle via Zurich via Geneva via Germany.
+I used to work for [Pulumi](https://www.pulumi.com/) on Infrastructure as Code tools, SDKs, and Azure support. Here are my public [PRs](https://github.com/search?q=is%3Apr+author%3Athomas11+org%3Apulumi++&type=pullrequests&state=closed) and [blog posts](https://www.pulumi.com/blog/author/thomas-kappler/).
+
+Before that, I was an engineer for Microsoft Azure working on the backend of
+[Cognitive Search (now AI Search)](https://azure.microsoft.com/en-us/products/ai-services/ai-search/), having fun with distributed systems and rollouts.
+
+See [my LinkedIn profile](https://www.linkedin.com/in/thomaskappler/) for the full bio.
 
 I co-authored a few [publications](/publications.html).
 
@@ -20,33 +24,8 @@ I co-authored a few [publications](/publications.html).
   - [Code on Github](https://github.com/thomas11)
   - [@jugglingbits on Twitter](https://twitter.com/jugglingbits)
   - [LinkedIn profile and professional bio](https://www.linkedin.com/in/thomaskappler/)
-  - [Exercism](https://exercism.io/profiles/thomas11) (practicing F# and Rust at the time of this writing)
+  - [Exercism](https://exercism.io/profiles/thomas11) (I used to practice F# and Rust there)
   - tkappler@gmail.com
-
-
-## Mini-Bio
-
-I studied Computer Science at [KIT](http://www.kit.edu/), Karlsruhe, Germany, writing
-[my thesis](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.84.955) at IIT Delhi, India.
-After graduating in 2007, I worked on a freelance project in linguistics with University of
-Heidelberg.
-
-In 2008 I joined the [Swiss Institute of Bioinformatics](http://www.isb-sib.ch) in Geneva,
-Switzerland and had a fantastic time developing tools for biologists, from web apps to storage
-backends to Semantic Web to Perl modules.
-
-In 2011 I moved to Zurich, first developing medical applications at
-[Nhumi Technologies](https://twitter.com/nhumi_tech?lang=en), then continuing this work on a
-federally funded data warehousing research project with Nhumi and the [zhaw](http://www.zhaw.ch)
-college.
-
-In 2013 I joined Microsoft Zurich, working on the Java + Linux + Azure backend of
-[Social Engagement](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/social-engagement/overview).
-
-In 2016 I transferred to [Azure Search](https://azure.microsoft.com/en-us/services/search/) in
-Redmond near Seattle to work on backend and search. I'm usually busy with anything between data consistency, automated rollouts and mitigations, generating files for odd configuration systems, and debugging arcana.
-
-My [LinkedIn page](http://ch.linkedin.com/in/thomaskappler/) has the details.
 
 
 ## Colophon
