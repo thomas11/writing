@@ -1,0 +1,69 @@
+title: Completing the Hugging Face Agents Course
+flags:
+blurb: Some fun hacking and a nice first exposure to this space
+categories: AI&ML,Courses
+
+<div style="text-align: center;">
+<img src="/static/posts/2026-02-01_hf_agents_course/cert.webp" />
+</div>
+
+I don't know about "excellence" with my score of 70, but hey, I did it. It was my first AI-focused project, as opposed to using AI in software development. The final assignment was indeed an actual project: [build out a basic template into an agent that can answer questions](https://huggingface.co/learn/agents-course/unit4/introduction) from the [GAIA benchmark](https://huggingface.co/spaces/gaia-benchmark/leaderboard).
+
+My [submission is here](https://huggingface.co/spaces/jugglingbits/Final_Assignment_Template/tree/main).
+
+The task was simple enough: your agent gets 20 questions in natural language, and needs to answer them with an exact (string-matching) factual answer. The first question, for instance, is
+
+> _How many studio albums were published by Mercedes Sosa between 2000 and 2009 (included)? You can use the latest 2022 version of english wikipedia._
+
+A side remark: while I think that's a really interesting and relevant challenge, one can debate how agentic it is. Answering questions is what LLMs do. This agent doesn't effect any changes in the real world. I'm fine calling it an agent, though, because we need to use tools to be successful in this challenge, and the AI decides which ones to use. The agent can also interpret the LLM's output and decide to ask follow-up questions, or try a different approach. That's the autonomy it has. Anyway, "agent" is the hot term of the season, so let's accept it and move on.
+
+The Hugging Face template is a Python program that can retrieve the questions, give them to the agent, and submit the results, so the boilerplate is mostly taken care of. I added the option to answer only the first N questions so we don't need to wait for all of them while the baby agent can't answer any yet.
+
+For the agent framework, I went with [smolagents](https://huggingface.co/docs/smolagents/index). [LangGraph](https://github.com/langchain-ai/langgraph) seems to be the industry standard but I liked the idea of sticking with something small and simple. Both are covered in the course. It went pretty well, except at the beginning where I got confused about which agent class to use. `CodeAgent` was the answer. Other than that, the docs are good, especially the tutorials such as _Building good agents_.
+
+For the model, I experimented with different ones and built a way to select one via an environment variable:
+
+```python
+provider_configs = {
+    "anthropic": ("Anthropic", "ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929", "ANTHROPIC_API_KEY", None),
+    "gemini": ("Google Gemini", "GEMINI_MODEL", "gemini/gemini-2.5-pro", "GEMINI_API_KEY", None),
+    "ollama": ("Ollama", "OLLAMA_MODEL", "ollama_chat/deepseek-r1:70b", None, "OLLAMA_API_BASE"),
+}
+```
+
+`deepseek-r1:70b` running locally via Ollama did really well, but in the end I used Gemini because it can natively watch and understand videos given a YouTube URL, which at least one question required.
+
+The meat of the agent is then essentially this, and the tools referenced here:
+
+```python
+self.agent = CodeAgent(tools=[DuckDuckGoSearchTool(),
+                                BrowserLikeVisitTool(),
+                                fetch_wikipedia_page,
+                                fetch_wikipedia_sections,
+                                fetch_wikipedia_section,
+                                youtube_visual_analysis_tool],
+                        model=model,
+                        description="smolagents CodeAgent with DuckDuckGo, "
+                            "Wikipedia, YouTube visual analysis, and base tools",
+                        instructions=instructions,
+                        additional_authorized_imports=[
+                            "ddgs",
+                            "markdownify",
+                            "requests",
+                            "pandas",
+                            "io",        # For BytesIO to handle file bytes
+                            "openpyxl",  # For Excel file support
+                            "PIL",       # For image processing
+                        ],
+                        planning_interval=1)
+```
+
+Tell the agent what tools it can use and give it [additional instructions](https://huggingface.co/spaces/jugglingbits/Final_Assignment_Template/blob/main/app.py#L60). The instructions are, in my case, simply a hard-coded text of about 400 words. They explain two things: how to use each tool and how to formulate the response. A detailed step-by-step guide was necessary for most tools.
+
+The tools themselves I wrote with heavy Claude Code support - it is an AI challenge after all. Given that I'm not too fluent in Python or Wikipedia internals, that was invaluable.
+
+And that's it. 1,500 lines of Python to answer 70% of the questions. Some takeaways:
+
+  - If you have the RAM, DeepSeek's models on Ollama are pretty good. Save your credits.
+  - Giving the agent small, focused [tools](https://huggingface.co/docs/smolagents/tutorials/tools) is an amazing, relatively low-cost way to enhance its functionality. Just describe clearly how and when to use the tool.
+  - Iteration speed can be limiting. DeepSeek on Ollama is really slow, and the agent can use the LLM many times to answer a question. I wish I had invested earlier in the ability to run it only on certain questions.
